@@ -29,7 +29,7 @@ A Windows frame-generation overlay (RIFE-Nano). The **"up to 8×"** figure is a 
 ---
 
 ## How to read these benchmarks
-- **Capacity ≠ speed.** "Runs a 120B model on 8 GB" is about *fitting and serving*, not tokens/second.
+- **Capacity ≠ speed.** "Runs a 120B model on 8 GB" is about *fitting and serving* — even on a **16 GB-RAM** laptop. It does decode (~1.5 tok/s, n=1, measured), but that is reported as a **capacity** result, never as a speed number.
 - **Throughput ≠ quality.** A frame-gen "8×" is frames produced, not visual fidelity.
 - **Conditions matter.** Every number lives next to its model, quantization, hardware, sample count and warm/cold state. A bare number is not a benchmark.
 - **Single runs are labelled.** Where n=1, it is said so; rigorous figures carry N and discarded warm-up.

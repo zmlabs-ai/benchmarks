@@ -19,7 +19,7 @@ The measured evidence below backs that claim on real hardware: a **120B-class Mo
 
 ## What these numbers do NOT prove
 - **Capacity ≠ speed.** "Runs a large model on a small machine" is about *fitting and serving*, not throughput; decode on the oversized configs is modest by design.
-- **The 8 GB 120B decode is a capacity result, n=1, ~1.5 tok/s** — NVMe-bound (16 GB RAM streams experts on every token). It proves the model *runs*, not that it runs fast. The **7.62 tok/s** figure is a **different machine** (datacenter L40S + 188 GB RAM), measuring the effect of abundant RAM — not the 8 GB laptop.
+- **Capacity even under limited RAM.** This laptop has only **16 GB RAM** and **8 GB VRAM**, yet a **63 GB** model runs by streaming MoE experts from NVMe — that *is* the capacity result. The **~1.5 tok/s** (n=1) is the honest cost of that constraint, not a speed claim; with abundant RAM the same model reaches **7.62 tok/s** (datacenter L40S + 188 GB RAM — a different machine).
 - **The capacity test uses synthetic log data**, not a live LLM; the win scales with compressibility (~3.05× here) and is zero on incompressible data — stated in the file.
 - **Quality is not lossless** — +20 % perplexity on a GPT-2 / WikiText-2 reference (a toy reference, disclosed).
 - **The 22.48 tok/s edge is fragile** (315 MiB free, OOM risk); the robust figure is ~18–21 tok/s.
