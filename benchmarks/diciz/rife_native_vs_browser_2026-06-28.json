@@ -1,0 +1,24 @@
+{
+  "title": "RIFE-Nano-S 270p latency: browser (WebGPU) vs native (DirectML) — rigorous re-measure",
+  "date": "2026-06-28",
+  "model": "rife_nano_s_270p.onnx (fp32; 62 fp32 weights, fp32 IO)",
+  "resolution": "480x270", "batch": 1,
+  "input": "single fixed deterministic frame pair, byte-identical on both sides (img0.bin/img1.bin)",
+  "precision_both_sides": "fp32 (model is fp32; neither side was asked to downcast)",
+  "readback_both_sides": "output read back to CPU on every timed run",
+  "timing": "warmup K=10 discarded, window N=50, median is the citable value",
+  "machine": "RTX 4070 Laptop (8 GB), Windows 11",
+  "native":  { "provider": "onnxruntime 1.24.4 DirectML", "ms_median": 4.127, "ms_p95": 4.521, "ms_min": 3.618, "ms_std": 0.302, "n": 50 },
+  "browser": { "provider": "onnxruntime-web 1.20.1 WebGPU, HeadlessChrome 149", "ms_median": 170.3, "ms_p95": 188.2, "ms_min": 126.0, "ms_std": 21.985, "n": 50 },
+  "ratio_browser_over_native_median": 41.26,
+  "label": "browser onnxruntime-web WebGPU vs native onnxruntime DirectML — NOT vs native-max (a TensorRT path would be faster, so the true browser-vs-best-native gap is larger)",
+  "output_parity": {
+    "max_abs_diff": 0.080632,
+    "native_output_range": 0.9963,
+    "max_abs_diff_pct_of_range": 8.1,
+    "pearson_corr": 0.99998995,
+    "verdict": "HIGH correlation (0.99999) but NOT bit-identical: peak divergence ~8% of range exceeds pure fp32 rounding, so one pipeline computes some ops differently (likely mixed precision / a different warp/resize kernel in onnxruntime-web WebGPU). The two are visually equivalent but not the same computation."
+  },
+  "decision": "We do NOT headline this ratio. Reasons: (1) the '73x' it replaced had a migrating provenance (was first described as a memory multiplier, then a speed ratio) — a cargo-cult smell; (2) outputs are not bit-identical (8% peak divergence), so 'apples-to-apples' is qualified, not exact; (3) 'the browser is 41x slower than native' argues against the in-browser products (diciz). What we keep on the landing is the clean, defensible measured fact: native RIFE-Nano runs at ~4 ms/frame (DirectML, RTX 4070) — real-time. No browser-vs-native ratio is published.",
+  "native_latency_citable": "~4 ms/frame (median 4.127 ms, p95 4.521 ms, std 0.302 ms, n=50, warmup discarded)"
+}

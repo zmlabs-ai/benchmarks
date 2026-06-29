@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "date": "2026-06-20",
+    "mission": "Valider le coup vitesse : prouver que ~64-128 Go de RAM permet a gpt-oss-120b d'atteindre ~10 t/s en decode (vs 1,50 t/s mesure sur le laptop 16 Go RAM). Experts forces en RAM via --cpu-moe ; GPU ne fait que l'attention.",
+    "methode": "RunPod sans SSH (casse) : API GraphQL pour creer le pod + image Docker ghcr.io/ggml-org/llama.cpp:full-cuda + Container Start Command (dockerArgs) + proxy HTTP RunPod pour piloter llama-server. Telechargement modele via --hf-repo/--hf-file (datacenter), launch llama-server --cpu-moe -ngl 99 -c 4096 --jinja --host 0.0.0.0 --port 8000.",
+    "modele": "ggml-org/gpt-oss-120b-GGUF (120B MoE, MXFP4 natif = lossless), 3 splits ~63,4 Go (gpt-oss-120b-mxfp4-00001..00003-of-00003.gguf)",
+    "llama_cpp": "image full-cuda tag courant (release ~b9739), build CUDA, llama-server",
+    "mesure": "POST /v1/chat/completions (max_tokens 200, temperature 0) via le proxy ; lecture de timings.predicted_per_second (= t/s decode mono-token batch-1). 3 requetes, resultats tres stables.",
+    "honnetete": "Aucun chiffre fabrique. Le t/s rapporte est lu directement des timings renvoyes par llama-server. 2 pods ont echoue avant le succes (entrypoint tools.sh / resolveur -hf split) et ont ete termines."
+  },
+  "gpu": "NVIDIA L40S (48 Go VRAM)",
+  "ram_go": 188,
+  "ram_go_demande_min": 64,
+  "vcpu": "non releve precisement (>=8 demande)",
+  "cloud": "RunPod SECURE",
+  "cout_horaire_usd": 0.99,
+  "t_s_decode_predicted_per_second": 7.62,
+  "t_s_decode_runs": [7.617, 7.584, 7.626],
+  "t_s_decode_median": 7.62,
+  "prefill_prompt_per_second": [32.4, 15.9, 15.5],
+  "reponse_coherente": true,
+  "exemple_reponse": "The ocean is a vast, ever-shifting tapestry of water that covers more than 70 percent of Earth's surface...",
+  "cout_estime_usd": 0.26,
+  "cout_detail_usd": {
+    "L40S_mesure_~6min": 0.10,
+    "A6000_1_echec_entrypoint_~3min": 0.03,
+    "A6000_2_echec_download_~17min": 0.14
+  },
+  "pod_termine": true,
+  "pods_crees_et_tous_termines": "redacted",
+  "comparaison_laptop": {
+    "laptop_16go_ram_t_s": 1.50,
+    "runpod_188go_ram_t_s": 7.62,
+    "acceleration": 5.08,
+    "note": "Le decode passe de 1,50 t/s (16 Go RAM, experts streames du NVMe a chaque token) a 7,62 t/s avec RAM abondante (188 Go, experts entierement residents). Acceleration x5,08. CONFIRME la these : le goulot etait bien la RAM, pas le calcul GPU (L40S modeste pour ce role, -cpu-moe = experts sur CPU/RAM)."
+  },
+  "verdict": "These VALIDEE en direction : RAM abondante leve le goulot et multiplie le decode par ~5 (1,50 -> 7,62 t/s). Le seuil symbolique des 10 t/s n'est PAS atteint sur cette config (L40S + 188 Go) en batch-1 mono-token : 7,62 t/s mesure. La projection 9-11 t/s du registre est plausible mais demande verification sur une config plus optimisee (CPU plus rapide / plus de threads / GPU plus proche de la cible) ; ici la VRAM L40S est large mais le regime --cpu-moe rend le decode CPU/bande-passante-RAM-bound. Reference tierce du registre : 9,7-11 t/s sur 4070 12 Go. NE PAS annoncer >=10 t/s : le chiffre honnete mesure aujourd'hui = 7,62 t/s.",
+  "limites": [
+    "Mesure batch-1 mono-token (le regime du coup d'eclat) ; pas de batching.",
+    "GPU L40S (datacenter) =/= laptop 8 Go ; ce test isole l'effet RAM, pas une repro exacte du laptop cible.",
+    "TTFT/CMR non mesure ici (autre mission).",
+    "vCPU/threads non optimises ; le decode --cpu-moe depend fortement du CPU et de la bande passante RAM."
+  ]
+}

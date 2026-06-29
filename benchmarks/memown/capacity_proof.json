@@ -1,0 +1,26 @@
+{
+  "exp": "capacity_proof_compressed_oom",
+  "cgroup_enforced": true,
+  "logical_bytes": 3221225554,
+  "zpk_bytes": 1057331539,
+  "compression_ratio_x": 3.05,
+  "cgroup_memory_max_mb": 1024,
+  "zscan_cap_mb": 512,
+  "oracle_checksum": "0x314a01e8f6b0f9aa",
+  "naive_rc": "137",
+  "naive_checksum": "none",
+  "naive_oom_events": "oom_kill 1;",
+  "naive_oom_killed": true,
+  "zscan_rc": "0",
+  "zscan_checksum": "0x314a01e8f6b0f9aa",
+  "zscan_peak_rss_kb": "575452",
+  "zscan_vmhwm_kb": "575960",
+  "zscan_finished_lossless": true,
+  "pass": true,
+  "honest_caveats": [
+    "Capacity gain, NOT speed: a logical working-set bigger than the cgroup RAM cap FINISHES because only the bounded decompressed ring + reclaimable compressed page-cache are resident.",
+    "Bounded by compressibility: the win scales with the zstd ratio (~3.05x here on realistic log data). Incompressible data => no capacity gain (we say so).",
+    "Filesystem-bound throughput on WSL /mnt drvfs (not representative of native NVMe). The OOM-vs-FINISH contrast is fs-independent.",
+    "naive arm loads ALL logical bytes into anonymous RAM (un-reclaimable, swap.max=0) => real cgroup OOM; not a strawman (it is the normal 'load the dataset' move)."
+  ]
+}

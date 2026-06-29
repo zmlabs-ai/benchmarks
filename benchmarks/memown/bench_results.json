@@ -1,0 +1,42 @@
+{
+  "benchmark": "MemoryBreakr VRAM vs NVMe",
+  "version": "3.0-scientific",
+  "methodology": {
+    "nvme_io": "FILE_FLAG_NO_BUFFERING + WRITE_THROUGH, single-open, SetFilePointerEx seek, pre-allocated",
+    "vram_io": "cudaMemcpy with cudaMallocHost (pinned DMA)",
+    "timing_vram": "cudaEvent (GPU-side, sub-microsecond)",
+    "timing_nvme": "QueryPerformanceCounter (sub-microsecond)",
+    "alignment": "4096-byte sector alignment for direct I/O",
+    "warmup": "3 rounds before measurement",
+    "statistics": "Bessel-corrected std dev, t-distribution 95% CI"
+  },
+  "system": {
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "vram_total_gb": 8.00,
+    "vram_free_gb": 6.89,
+    "pcie": "Gen4 x8 (laptop)",
+    "os": "Windows 11"
+  },
+  "throughput": [
+    {"test": "1 MB_vram_write", "mean_gbps": 10.1205, "std_dev": 0.4685, "ci95_lo": 9.9866, "ci95_hi": 10.2543, "min": 7.8532, "max": 10.3907, "n": 50},
+    {"test": "1 MB_vram_read", "mean_gbps": 10.4882, "std_dev": 0.5227, "ci95_lo": 10.3389, "ci95_hi": 10.6375, "min": 6.9914, "max": 10.7722, "n": 50},
+    {"test": "1 MB_nvme_write", "mean_gbps": 0.2005, "std_dev": 0.0406, "ci95_lo": 0.1889, "ci95_hi": 0.2121, "min": 0.1111, "max": 0.3091, "n": 50},
+    {"test": "1 MB_nvme_read", "mean_gbps": 2.1366, "std_dev": 0.1051, "ci95_lo": 2.1066, "ci95_hi": 2.1666, "min": 1.8690, "max": 2.2812, "n": 50},
+    {"test": "64 MB_vram_write", "mean_gbps": 12.4641, "std_dev": 0.0300, "ci95_lo": 12.4529, "ci95_hi": 12.4753, "min": 12.3494, "max": 12.4942, "n": 30},
+    {"test": "64 MB_vram_read", "mean_gbps": 12.2403, "std_dev": 0.0235, "ci95_lo": 12.2316, "ci95_hi": 12.2491, "min": 12.1537, "max": 12.2566, "n": 30},
+    {"test": "64 MB_nvme_write", "mean_gbps": 1.0487, "std_dev": 0.1293, "ci95_lo": 1.0004, "ci95_hi": 1.0970, "min": 0.6888, "max": 1.2649, "n": 30},
+    {"test": "64 MB_nvme_read", "mean_gbps": 3.4950, "std_dev": 0.1449, "ci95_lo": 3.4408, "ci95_hi": 3.5491, "min": 2.9898, "max": 3.5987, "n": 30},
+    {"test": "256 MB_vram_write", "mean_gbps": 12.4781, "std_dev": 0.0147, "ci95_lo": 12.4726, "ci95_hi": 12.4836, "min": 12.4524, "max": 12.5089, "n": 30},
+    {"test": "256 MB_vram_read", "mean_gbps": 12.2462, "std_dev": 0.0145, "ci95_lo": 12.2408, "ci95_hi": 12.2517, "min": 12.2203, "max": 12.2708, "n": 30},
+    {"test": "256 MB_nvme_write", "mean_gbps": 1.0787, "std_dev": 0.2290, "ci95_lo": 0.9932, "ci95_hi": 1.1642, "min": 0.0530, "max": 1.2841, "n": 30},
+    {"test": "256 MB_nvme_read", "mean_gbps": 3.3780, "std_dev": 0.0797, "ci95_lo": 3.3483, "ci95_hi": 3.4078, "min": 3.1413, "max": 3.4636, "n": 30},
+    {"test": "1 GB_vram_write", "mean_gbps": 12.5051, "std_dev": 0.0056, "ci95_lo": 12.5030, "ci95_hi": 12.5072, "min": 12.4947, "max": 12.5175, "n": 30},
+    {"test": "1 GB_vram_read", "mean_gbps": 12.2691, "std_dev": 0.0042, "ci95_lo": 12.2675, "ci95_hi": 12.2706, "min": 12.2586, "max": 12.2784, "n": 30},
+    {"test": "1 GB_nvme_write", "mean_gbps": 1.0306, "std_dev": 0.2978, "ci95_lo": 0.9195, "ci95_hi": 1.1418, "min": 0.1868, "max": 1.2103, "n": 30},
+    {"test": "1 GB_nvme_read", "mean_gbps": 3.5424, "std_dev": 0.1629, "ci95_lo": 3.4816, "ci95_hi": 3.6032, "min": 2.8584, "max": 3.6542, "n": 30}
+  ],
+  "latency_4kb_us": {
+    "vram": {"mean": 28.2134, "std_dev": 14.6491, "ci95_lo": 25.2836, "ci95_hi": 31.1433, "min": 20.8640, "max": 123.8400, "n": 100},
+    "nvme": {"mean": 37.3280, "std_dev": 3.3865, "ci95_lo": 36.6507, "ci95_hi": 38.0053, "min": 33.2000, "max": 49.1000, "n": 100}
+  }
+}

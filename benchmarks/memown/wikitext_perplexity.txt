@@ -1,0 +1,31 @@
+=== WikiText-2 Perplexity Benchmark (formal) ===
+
+Model   : <path>/gpt2-full
+Dataset : wikitext-2-raw-v1, split=test
+Window  : max_length=1024, stride=512
+
+[1] Original GPT-2 124M...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Generating test split:   0%|          | 0/4358 [00:00<?, ? examples/s]Generating test split:  23%|██▎       | 1000/4358 [00:00<00:01, 2429.06 examples/s]Generating test split: 100%|██████████| 4358/4358 [00:00<00:00, 10302.45 examples/s]
+Generating train split:   0%|          | 0/36718 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 36718/36718 [00:00<00:00, 1009302.59 examples/s]
+Generating validation split:   0%|          | 0/3760 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 3760/3760 [00:00<00:00, 647237.26 examples/s]
+Token indices sequence length is longer than the specified maximum sequence length for this model (287644 > 1024). Running this sequence through the model will result in indexing errors
+    Perplexity : 25.17
+    Windows    : 561
+    Tokens     : 287644
+    Time       : 569.9s
+
+[2] RAMEXTEND GPT-2 (hybrid SVD+INT4, embeddings FP32)...
+    Compressed : SVD=0, INT4=48, skip=2
+    Compress time: 29.8s
+    Perplexity : 30.19
+    Time       : 538.9s
+
+=== WIKITEXT-2 PERPLEXITY RESULTS ===
+  Original GPT-2  : 25.17
+  RAMEXTEND hybrid: 30.19
+  Ratio           : 1.1995x
+  Reference       : GPT-2 124M known = ~29.41
+  Quality         : GOOD (< 1.20x, acceptable for production)
+
+PASS -- WikiText-2 perplexity within industry threshold

@@ -1,0 +1,98 @@
+{
+  "model": "Qwen3-30B-A3B-Q4_K_M.gguf",
+  "model_path": "<path>/qwen3-30b-a3b/Qwen3-30B-A3B-Q4_K_M.gguf",
+  "meta": {
+    "arch": "qwen3moe",
+    "name": "Qwen3 30B A3B",
+    "n_layers": 48,
+    "n_experts": 128,
+    "n_experts_used": 8,
+    "n_ctx_train": 32768,
+    "is_moe": true,
+    "size_gb": 18.63
+  },
+  "machine": {
+    "gpu": "RTX 4070 Laptop 8GB (measured via nvidia-smi)",
+    "peak_bw_gbps_datasheet": 256.0,
+    "vram_free_mib_at_start": 757.0
+  },
+  "server_bin": "<path>\\llama.cpp-src\\build-cuda\\bin\\llama-server.exe",
+  "ctx": 4096,
+  "ngen": 256,
+  "runs": [
+    {
+      "ncmoe": 44,
+      "ctx": 4096,
+      "flags": "-m <path>/qwen3-30b-a3b/Qwen3-30B-A3B-Q4_K_M.gguf --host 127.0.0.1 --port 8131 -ngl 99 -fa 1 -ctk q8_0 -ctv q8_0 -c 4096 -b 2048 -ub 512 -np 1 --no-mmap -ncmoe 44",
+      "decode_tps": 18.32,
+      "prefill_tps": 8.61,
+      "predicted_n": 256,
+      "predicted_ms": 13972.563,
+      "util_gpu_pct": 25.7,
+      "util_mem_pct": 11.6,
+      "power_w": 12.8,
+      "vram_used_mib_peak": 3745.0,
+      "n_samples": 54,
+      "j_per_token": 0.699,
+      "result": "ok"
+    },
+    {
+      "ncmoe": 38,
+      "ctx": 4096,
+      "flags": "-m <path>/qwen3-30b-a3b/Qwen3-30B-A3B-Q4_K_M.gguf --host 127.0.0.1 --port 8131 -ngl 99 -fa 1 -ctk q8_0 -ctv q8_0 -c 4096 -b 2048 -ub 512 -np 1 --no-mmap -ncmoe 38",
+      "decode_tps": 12.65,
+      "prefill_tps": 9.66,
+      "predicted_n": 256,
+      "predicted_ms": 20230.86,
+      "util_gpu_pct": 30.6,
+      "util_mem_pct": 14.2,
+      "power_w": 12.0,
+      "vram_used_mib_peak": 5889.0,
+      "n_samples": 65,
+      "j_per_token": 0.949,
+      "result": "ok"
+    },
+    {
+      "ncmoe": 34,
+      "ctx": 4096,
+      "flags": "-m <path>/qwen3-30b-a3b/Qwen3-30B-A3B-Q4_K_M.gguf --host 127.0.0.1 --port 8131 -ngl 99 -fa 1 -ctk q8_0 -ctv q8_0 -c 4096 -b 2048 -ub 512 -np 1 --no-mmap -ncmoe 34",
+      "decode_tps": 20.84,
+      "prefill_tps": 10.32,
+      "predicted_n": 256,
+      "predicted_ms": 12285.851,
+      "util_gpu_pct": 25.6,
+      "util_mem_pct": 14.8,
+      "power_w": 14.9,
+      "vram_used_mib_peak": 7231.0,
+      "n_samples": 40,
+      "j_per_token": 0.715,
+      "result": "ok"
+    },
+    {
+      "ncmoe": 30,
+      "ctx": 4096,
+      "flags": "-m <path>/qwen3-30b-a3b/Qwen3-30B-A3B-Q4_K_M.gguf --host 127.0.0.1 --port 8131 -ngl 99 -fa 1 -ctk q8_0 -ctv q8_0 -c 4096 -b 2048 -ub 512 -np 1 --no-mmap -ncmoe 30",
+      "decode_tps": 22.48,
+      "prefill_tps": 58.54,
+      "predicted_n": 256,
+      "predicted_ms": 11385.521,
+      "util_gpu_pct": 50.5,
+      "util_mem_pct": 14.7,
+      "power_w": 36.5,
+      "vram_used_mib_peak": 7873.0,
+      "n_samples": 37,
+      "j_per_token": 1.624,
+      "result": "ok"
+    }
+  ],
+  "best": {
+    "ncmoe": 30,
+    "decode_tps": 22.48,
+    "util_gpu_pct": 50.5,
+    "util_mem_pct": 14.7,
+    "power_w": 36.5,
+    "j_per_token": 1.624,
+    "vram_used_mib_peak": 7873.0
+  },
+  "honesty_note": "decode_tps = generation-only (excludes prefill), from llama-server timings. util_mem_pct is nvidia-smi memory-controller busy %, NOT a computed MBU: for an offloaded MoE the binding link is partly PCIe (not exposed by nvidia-smi), so a simple weights*t/s/peakBW MBU does not apply to this regime. peak_bw is datasheet (256 GB/s), not measured. All numbers are from the running server + live nvidia-smi; nothing fabricated."
+}

@@ -1,0 +1,20 @@
+{
+  "title": "GlassBreakr ULTRA 8x — real-time generation throughput, measured on the RTX 4070",
+  "date": "2026-06-24",
+  "machine": "RTX 4070 Laptop",
+  "runtime": "onnxruntime 1.24.4 / DmlExecutionProvider (DirectML)",
+  "model": "rife_nano_s_flow_320x192.onnx (the real GlassBreakr ULTRA interpolation model)",
+  "method": "Mirror multi_frame_interpolator at ULTRA (mult=8): ONE RIFE flow inference per captured frame pair, then warp to 7 evenly-spaced timesteps (cv2.remap) + blend + resize to 1920x1080. Wall-clock (sess.run blocks until CPU readback). Warmup 6, median of 30. Repro: scratchpad/measure_ultra_8x.py.",
+  "result": {
+    "tier": "ULTRA (8x = 1 captured + 7 AI-interpolated frames displayed per captured frame)",
+    "output_res": "1920x1080",
+    "ms_to_generate_7_interpolated_frames": { "median": 15.8, "min": 14.19, "max": 17.82 },
+    "max_captured_fps_sustaining_8x_output": 63.3,
+    "examples": [
+      "game render 30 fps -> ~240 fps OUTPUT (8x generated), real-time",
+      "captured 63 fps -> ~506 fps OUTPUT (8x generated)"
+    ]
+  },
+  "verdict": "[MESURE] The engine CAN generate 8x OUTPUT (1 captured + 7 interpolated) in REAL TIME at 1080p on the RTX 4070 for any game rendering up to ~63 fps. So 'up to 8x FPS' is real and real-time-achievable AS A GENERATED/OUTPUT FRAME RATE.",
+  "honest_scope": "These are AI-INTERPOLATED frames (7 of 8). The game's render rate is UNCHANGED and input latency rises ~15-25 ms — identical model to NVIDIA DLSS Frame Generation and Lossless Scaling. OUTPUT/displayed fps up to 8x; real (responsive) frames ~2x; what you SEE is capped by the monitor refresh (e.g. 256 generated -> ~180 on a 180Hz panel = ~4x visible). Disclose the frame-gen nature (the FAQ does). Do NOT present 8x as render performance/responsiveness."
+}

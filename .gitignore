@@ -1,0 +1,19 @@
+# Large model weights / archives never belong in a benchmarks repo
+*.gguf
+*.zip
+*.bin
+*.safetensors
+
+# Secrets / local config
+.env*
+.dev.vars
+*.key
+*.pem
+
+# Assets hosted elsewhere (R2 / object storage)
+R2-assets/
+
+# Dependencies / build / OS noise
+node_modules/
+.DS_Store
+Thumbs.db

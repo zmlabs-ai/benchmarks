@@ -1,0 +1,58 @@
+{
+  "title": "gpt-oss-120B loads, serves and DECODES on an 8 GB laptop GPU (capacity result, not speed)",
+  "claim": "A 120B-class MoE model boots, serves an OpenAI-compatible endpoint, and GENERATES coherent tokens on a single 8 GB consumer laptop GPU + system RAM, by streaming the MoE experts from NVMe. This is a CAPACITY result; sustained decode is modest by design.",
+  "model": "gpt-oss-120b (MoE, 128 experts), MXFP4 native, 3 GGUF shards (~63.4 GB total)",
+  "machine": {
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU, 8188 MiB VRAM (nvidia-smi)",
+    "ram_gb": 16,
+    "model_storage": "local NVMe",
+    "os": "Windows 11"
+  },
+  "runtime": "llama.cpp llama-server, MoE expert-offload",
+  "flags": "--cpu-moe -ngl 99 -c 4096 -t 8 --jinja --no-warmup",
+  "batch": "batch-1, single-token decode",
+
+  "primary_measurement_sustained_n1": {
+    "date": "2026-06 (local run on the development laptop)",
+    "n": 1,
+    "prefill": {
+      "prompt_tokens": 122,
+      "prompt_ms": 108727.322,
+      "prompt_per_token_ms": 891.21,
+      "prefill_tokens_per_second": 1.1220730700973212,
+      "note": "cold, cache_n=0"
+    },
+    "decode": {
+      "predicted_tokens": 300,
+      "predicted_ms": 199351.178,
+      "ms_per_token": 664.5039266666668,
+      "decode_tokens_per_second": 1.504882002753954
+    },
+    "source": "llama-server timings (predicted_per_second), read directly from the running server"
+  },
+
+  "corroboration_fresh_local_run": {
+    "date": "2026-06-29",
+    "same_machine_and_flags": true,
+    "gpu_confirmed_nvidia_smi": "NVIDIA GeForce RTX 4070 Laptop GPU, 8188 MiB total, ~6900 MiB free at launch",
+    "prompt": "Explain in two sentences why the ocean is salty.",
+    "coherent_answer": "The ocean is salty because it contains dissolved minerals and salts that have been carried ...",
+    "warmup_decode": {
+      "predicted_tokens": 16,
+      "decode_tokens_per_second": 2.2916900311626875,
+      "prefill_tokens_per_second": 0.9248954382584663,
+      "note": "short warmup completion; a 16-token generation reads slightly faster than the 300-token sustained figure. The run re-confirmed load + serve + coherent generation on the 8 GB GPU, then was stopped to spare the machine before the full N=3 reps."
+    }
+  },
+
+  "honest_caveats": [
+    "CAPACITY, not speed: the headline is that a 120B-class model RUNS on an 8 GB laptop, NOT that it runs fast. Sustained decode is ~1.5 tok/s.",
+    "n=1 for the sustained 300-token figure. The 2026-06-29 local run independently re-confirmed that the model loads, serves and generates coherent text on the same 8 GB GPU.",
+    "NVMe-bound: with only 16 GB RAM, the experts are streamed from NVMe on every token (~0.66 s/token) — that is why it is slow. More RAM lifts it.",
+    "This is NOT the >=10 tok/s target. The 9-11 tok/s figures discussed in the project are projections, not measured here.",
+    "A higher 120B decode (7.62 tok/s) exists only on a datacenter GPU with 188 GB RAM (see runpod_64gb_validation.json) — a different machine, labelled as such.",
+    "The OpenAI-compatible endpoint served correctly; the boot/serve path was separately measured healthy 4x (see the project's e2e boot/serve record)."
+  ],
+
+  "status": "[MEASURED] gpt-oss-120B loads + serves + decodes on an RTX 4070 Laptop 8 GB; sustained decode 1.50 tok/s (n=1, NVMe-bound); coherent generation re-confirmed 2026-06-29."
+}
