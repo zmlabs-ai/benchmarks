@@ -5,7 +5,7 @@
 ## What it does
 memown is a local inference layer whose goal is to **fit and serve models that are larger than your VRAM** — keeping the bulk of a Mixture-of-Experts model in system RAM (and, under memory pressure, surviving by compression) instead of demanding a bigger GPU. Its headline is a **capacity** result — "run a large model on a small machine" — explicitly **not** a tokens-per-second claim.
 
-The measured evidence below backs that claim on real hardware: a **120B-class MoE that boots, serves and decodes on the 8 GB laptop GPU itself** — at ~1.5 tok/s (n=1, NVMe-bound: a capacity result, not a speed claim); a 30B-class MoE on the same 8 GB GPU at ~18–21 tok/s; the same 120B reaching 7.62 tok/s once RAM is abundant (a datacenter GPU — disclosed); the VRAM-vs-NVMe bandwidth gap behind the memory tier; the compression-backed OOM-survival mechanism; and the honest quality cost of memory tiering.
+The measured evidence below backs that claim on real hardware: a **120B-class MoE that boots, serves and decodes on the 8 GB laptop GPU itself** — it **runs at all even with only 16 GB RAM** (experts streamed from NVMe, ~1.5 tok/s, n=1: the *worst case that still works*, **not** a nominal speed). With more system RAM the decode rises — the **same 120B reaches 7.62 tok/s with 188 GB RAM** (a server run, disclosed). The set also shows: a 30B-class MoE on the same 8 GB GPU at ~18–21 tok/s; the VRAM-vs-NVMe bandwidth gap behind the memory tier; the compression-backed OOM-survival mechanism; and the honest quality cost of memory tiering.
 
 ## Measured benchmarks
 | Claim | Measured value | Conditions (model · quant · hardware · batch · n · warm/cold) | Source file |

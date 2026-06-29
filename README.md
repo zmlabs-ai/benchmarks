@@ -11,7 +11,7 @@ This repository gathers the **measured benchmarks** behind ZMLabs' four products
 ## The four products
 
 ### 🧠 memown — run a large local AI on a small machine
-A local inference layer focused on **capacity, not raw speed**: it boots, serves **and decodes** a **120B-class MoE model on an 8 GB GPU + system RAM** — at **~1.5 tok/s** (n=1, NVMe-bound; see [`benchmarks/memown/local_120b_8gb_decode.json`](benchmarks/memown/local_120b_8gb_decode.json)). This is a capacity result, explicitly **not** a speed claim. On a mid-range MoE (Qwen3-30B-A3B Q4_K_M, RTX 4070 8 GB) it serves at **~18–21 tok/s robustly** (up to ~22 at a memory-fragile edge — disclosed). Quality changes from memory tiering are reported honestly (e.g. perplexity +20 % on a GPT-2 / WikiText-2 reference — **not** "lossless").
+A local inference layer focused on **capacity, not raw speed**: it boots, serves **and decodes** a **120B-class MoE model on an 8 GB GPU + system RAM**. This run shows the model **runs at all** on an 8 GB GPU **even with only 16 GB RAM** (experts NVMe-streamed, **~1.5 tok/s**, n=1; see [`benchmarks/memown/local_120b_8gb_decode.json`](benchmarks/memown/local_120b_8gb_decode.json)) — read it as the *worst case that still works*, **not** memown's nominal speed. With more system RAM the decode rises: the **same 120B reaches 7.62 tok/s with 188 GB RAM** (a server run). On a mid-range MoE (Qwen3-30B-A3B Q4_K_M, RTX 4070 8 GB) it serves at **~18–21 tok/s robustly** (up to ~22 at a memory-fragile edge — disclosed). Quality changes from memory tiering are reported honestly (e.g. perplexity +20 % on a GPT-2 / WikiText-2 reference — **not** "lossless").
 → proofs: [`benchmarks/memown/`](benchmarks/memown/)
 
 ### 🎮 diciz — an LLM that runs in your browser
@@ -29,7 +29,7 @@ A Windows frame-generation overlay (RIFE-Nano). The **"up to 8×"** figure is a 
 ---
 
 ## How to read these benchmarks
-- **Capacity ≠ speed.** "Runs a 120B model on 8 GB" is about *fitting and serving* — even on a **16 GB-RAM** laptop. It does decode (~1.5 tok/s, n=1, measured), but that is reported as a **capacity** result, never as a speed number.
+- **Capacity ≠ speed.** Capacity means it **runs at all** — even if sustained decode is modest (~1.5 tok/s on 8 GB).
 - **Throughput ≠ quality.** A frame-gen "8×" is frames produced, not visual fidelity.
 - **Conditions matter.** Every number lives next to its model, quantization, hardware, sample count and warm/cold state. A bare number is not a benchmark.
 - **Single runs are labelled.** Where n=1, it is said so; rigorous figures carry N and discarded warm-up.
